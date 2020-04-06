@@ -6,7 +6,8 @@
   "author": "Anna Kuszal <anna.kuszal@o2.pl>",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "build": "cd client && yarn install && yarn build"
   },
   "dependencies": {
     "cors": "^2.8.5",
