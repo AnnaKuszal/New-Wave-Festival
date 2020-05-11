@@ -7,13 +7,14 @@ const mongoose = require('mongoose');
 //const uuidv4 = require('uuid/v4');
 //const db = require('./db');
 
+const testimonialsRoutes = require('./routes/testimonials.routes');
+const concertsRoutes = require('./routes/concerts.routes');
+const seatsRoutes = require('./routes/seats.routes');
+
 const app = express();
 
 app.use(express.static(path.join(__dirname, '/client/build')));
 
-const testimonialsRoutes = require('./routes/testimonials.routes');
-const concertsRoutes = require('./routes/concerts.routes');
-const seatsRoutes = require('./routes/seats.routes');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -55,6 +56,10 @@ const io = socket(server);
 
 io.on('connection', (socket) => {
   console.log('New socket!');
+  
+  socket.on('seatsUpdated', () => {
+    console.log('I got something');
+  });
 
 });
 

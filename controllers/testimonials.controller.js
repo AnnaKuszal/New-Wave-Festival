@@ -48,27 +48,28 @@ exports.post = async (req, res) => {
 exports.put = async (req, res) => {
   const { author, text } = req.body;
   try {
-    await Testimonial.findByIdAndUpdate(
-      req.params.id,
-      { $set: { author: author, text: text } },
-      { new: true },
-      (err, doc) => {
-        if (err) res.status(404).json({ message: 'Not found...' });
-        else res.json(doc);
-      }
-    );
-  } catch (err) {
+    const testim = await(Testimonial.findById(req.params.id));
+    if(testim) {
+      await Testimonial.updateOne({ _id: req.params.id }, { $set: { author: author, text: text }});
+      res.json(await Testimonial.find())
+    }
+    else res.status(404).json({ message: 'Not found...' });
+  }
+  catch (err) {
     res.status(500).json({ message: err });
   }
 };
 
 exports.delete = async (req, res) => {
   try {
-    await Testimonial.findByIdAndRemove(req.params.id, (err, doc) => {
-      if (err) res.status(404).json({ message: 'Not found...' });
-      else res.json(doc);
-    });
-  } catch (err) {
+    const testim = await(Testimonial.findById(req.params.id));
+    if(testim) {
+      await Testimonial.deleteOne({ _id: req.params.id });
+      res.json(await Testimonial.find())
+    }
+    else res.status(404).json({ message: 'Not found...' });
+  }
+  catch (err) {
     res.status(500).json({ message: err });
   }
 };
