@@ -4,7 +4,7 @@ const router = express.Router();
 const db = require('./../db');
 
 
-router.route('/testimonials').get((req, res) => {
+router.get('/testimonials', async (req, res) => {
   try {
     res.json(await Testimonial.find());
   } catch (err) {
@@ -12,7 +12,7 @@ router.route('/testimonials').get((req, res) => {
   }
 });
 
-router.route('/testimonials/random').get((req, res) => {
+router.get('/testimonials/random', async (req, res) => {
   res.json(db.testimonials[Math.floor(Math.random() * db.testimonials.length + 0)]);
 
   try {
@@ -28,7 +28,7 @@ router.route('/testimonials/random').get((req, res) => {
 }); 
 
 
-router.route('/testimonials/:id').get((req, res) => {
+router.get('/testimonials/:id', async (req, res) => {
   try {
     const testimonial = await Testimonial.findById(req.params.id);
     if (!testimonial) res.status(404).json({ message: 'Not found' });
@@ -38,7 +38,7 @@ router.route('/testimonials/:id').get((req, res) => {
   }
 });
 
-router.route('/testimonials').post((req, res) => {
+router.post('/testimonials', async (req, res) => {
   try {
     const { author, text } = req.body;
     const newTestimonial = new Testimonial({ author: author, text: text });
@@ -49,7 +49,7 @@ router.route('/testimonials').post((req, res) => {
   }
 });
 
-router.route('/testimonials/:id').put((req, res) => {
+router.put('/testimonials/:id', async (req, res) => {
   const { author, text } = req.body;
   try {
     await Testimonial.findByIdAndUpdate(
@@ -66,7 +66,7 @@ router.route('/testimonials/:id').put((req, res) => {
   }
 });
 
-router.route('/testimonials/:id').delete((req, res) => {
+router.delete('/testimonials/:id', async (req, res) => {
   try {
     await Testimonial.findByIdAndRemove(req.params.id, (err, doc) => {
       if (err) res.status(404).json({ message: 'Not found...' });

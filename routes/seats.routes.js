@@ -4,7 +4,7 @@ const router = express.Router();
 const db = require('./../db');
 
 
-router.route('/seats').get((req, res) => {
+router.get('/seats', async (req, res) => {
   try {
     res.json(await Seat.find());
   } catch (err) {
@@ -13,7 +13,7 @@ router.route('/seats').get((req, res) => {
 });
 
 
-router.route('/seats/:id').get((req, res) => {
+router.get('/seats/:id', async (req, res) => {
   try {
     const seat = await Seat.findById(req.params.id);
     if (!seat) res.status(404).json({ message: 'Not found' });
@@ -23,7 +23,7 @@ router.route('/seats/:id').get((req, res) => {
   }
 });
 
-router.route('/seats').post((req, res) => {
+router.post('/seats', async (req, res) => {
   try {
     const { day, seat, client, email } = req.body;
     const newSeat = new Seat({ day: day, seat: seat, client: client, email: email });
@@ -35,7 +35,7 @@ router.route('/seats').post((req, res) => {
   
 });
 
-router.route('/seats/:id').put((req, res) => {
+router.put('/seats/:id', async (req, res) => {
   const { day, seat, client, email } = req.body;
   try {
     await Seat.findByIdAndUpdate(
@@ -52,7 +52,7 @@ router.route('/seats/:id').put((req, res) => {
   }
 });
 
-router.route('/seats/:id').delete((req, res) => {
+router.delete('/seats/:id', async (req, res) => {
   try {
     await Seat.findByIdAndRemove(req.params.id, (err, doc) => {
       if (err) res.status(404).json({ message: 'Not found...' });

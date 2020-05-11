@@ -4,7 +4,7 @@ const router = express.Router();
 const db = require('./../db');
 
 
-router.route('/concerts').get((req, res) => {
+router.get('/concerts', async (req, res) => {
   try {
     res.json(await Concert.find());
   } catch {
@@ -12,7 +12,7 @@ router.route('/concerts').get((req, res) => {
   }
 });
 
-router.route('/concerts/:id').get((req, res) => {
+router.get('/concerts/:id', async (req, res) => {
   try {
     const concert = await Concert.findById(req.params.id);
     if (!concert) res.status(404).json({ message: 'Not found' });
@@ -22,7 +22,7 @@ router.route('/concerts/:id').get((req, res) => {
   }
 });
 
-router.route('/concerts').post((req, res) => {
+router.post('/concerts', async (req, res) => {
   try {
     const { performer, genre, price, day, image } = req.body;
     const newConcert = new Concert({
@@ -39,7 +39,7 @@ router.route('/concerts').post((req, res) => {
   }
 });
 
-router.route('/concerts/:id').put((req, res) => {
+router.put('/concerts/:id', async (req, res) => {
   const { performer, genre, price, day, image } = req.body;
   try {
     await Concert.findByIdAndUpdate(
@@ -64,7 +64,7 @@ router.route('/concerts/:id').put((req, res) => {
   }
 });
 
-router.route('/concerts/:id').delete((req, res) => {
+router.delete('/concerts/:id', async (req, res) => {
   try {
     await Concert.findByIdAndRemove(req.params.id, (err, doc) => {
       if (err) res.status(404).json({ message: 'Not found...' });
