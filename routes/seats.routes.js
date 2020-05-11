@@ -5,64 +5,62 @@ const db = require('./../db');
 
 
 router.route('/seats').get((req, res) => {
-  res.json(db.seats);
+  try {
+    res.json(await Seat.find());
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
 });
 
 
 router.route('/seats/:id').get((req, res) => {
-  res.json(db.seats.filter(item => item.id == req.params.id));
+  try {
+    const seat = await Seat.findById(req.params.id);
+    if (!seat) res.status(404).json({ message: 'Not found' });
+    else res.json(seat);
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
 });
 
 router.route('/seats').post((req, res) => {
-  const { day, seat, client, email } = req.body;
-  const id = uuidv4();
-
-  const newSeat = {
-    id: id, 
-    day: day,
-    seat: seat,
-    client: client,
-    email: email
-  }
-
-  if (db.seats.some(i => i.seat == newSeat.seat && i.day == newSeat.day)) {
-    res.json({ message: "The slot is already taken..." });
-    res.status(403).json({ message: 'The slot is already taken...' });
-
-  } else {
-    db.seats.push(newSeat);
-    req.io.emit('seatsUpdated', db.seats);
+  try {
+    const { day, seat, client, email } = req.body;
+    const newSeat = new Seat({ day: day, seat: seat, client: client, email: email });
+    await newSeat.save();
     res.json({ message: 'OK' });
+  } catch (err) {
+    res.status(500).json({ message: err });
   }
-
   
 });
 
 router.route('/seats/:id').put((req, res) => {
   const { day, seat, client, email } = req.body;
-
-  const changedConcert = {
-    id: id, 
-    day: day,
-    seat: seat,
-    client: client,
-    email: email
+  try {
+    await Seat.findByIdAndUpdate(
+      req.params.id,
+      { $set: { day: day, seat: seat, client: client, email: email } },
+      { new: true },
+      (err, doc) => {
+        if (err) res.status(404).json({ message: 'Not found...' });
+        else res.json(doc);
+      }
+    );
+  } catch (err) {
+    res.status(500).json({ message: err });
   }
-
-  const item = db.seats.find(item => item.id == req.params.id);
-  const index = db.seats.indexOf(item);
-
-  db.seats[index] = changedConcert;
-
-  res.json({ message: 'OK' });
 });
 
 router.route('/seats/:id').delete((req, res) => {
-  const item = db.seats.find(item => item.id == req.params.id);
-  const index = db.seats.indexOf(item);
-  db.seats.splice(index, 1);
-
-  res.json({ message: 'OK' });
+  try {
+    await Seat.findByIdAndRemove(req.params.id, (err, doc) => {
+      if (err) res.status(404).json({ message: 'Not found...' });
+      else res.json(doc);
+    });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
 });
 
 
