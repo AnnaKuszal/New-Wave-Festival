@@ -40,6 +40,7 @@ app.use((req, res) => {
 
 // connects our backend code with the database
 mongoose.connect('mongodb+srv://Anna_Kuszal:Access2020%23@cluster0-okq4w.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+
 const db = mongoose.connection;
 
 db.once('open', () => {
@@ -63,3 +64,4 @@ io.on('connection', (socket) => {
 
 });
 
+module.exports = server;
