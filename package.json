@@ -7,8 +7,8 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon server.js",
-    "build": "cd client && yarn install && yarn build",
-    "test": "mocha --watch \"./**/*.test.js\""
+    "test": "mocha \"./test/**/*.test.js\"",
+    "test:watch": "onchange \"./**/*.js\" -i -k -- yarn run test"
   },
   "dependencies": {
     "chai": "4.2.0",
