@@ -3,6 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 
 //const uuidv4 = require('uuid/v4');
 //const db = require('./db');
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, '/client/build')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+const helmet = require('helmet');
 
 app.use((req, res, next) => {
   req.io = io;
