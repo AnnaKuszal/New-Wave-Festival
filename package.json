@@ -23,7 +23,7 @@
     "nodemon": "^2.0.2",
     "onchange": "6.1.0",
     "snyk": "1.235.0",
-    "socket.io": "2.2.0",
+    "socket.io": "2.4.0",
     "uuid": "^7.0.3"
   },
   "devDependencies": {}
